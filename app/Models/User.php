@@ -27,6 +27,39 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'role' => 'integer',
         ];
     }
+
+    const ROLE_ADMIN = 0;
+    const ROLE_SUPERADMIN = 1;
+
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'role'
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+    
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === self::ROLE_SUPERADMIN;
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
+
+    // bikin relasi ygy
+
+    public function quizzes()
+    {
+        return $this->hasMany(Quiz::class, 'user_id');
+    }   
 }
