@@ -8,4 +8,15 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);
-Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->middleware('auth:sanctum');
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
+});
+
+Route::middleware(['auth:sanctum', 'superadmin'])->group(function () {
+    Route::get('/superadmin-only', function () {
+        return response()->json([
+            'message' => 'Welcome, Super Admin!'
+        ]);
+    });
+});

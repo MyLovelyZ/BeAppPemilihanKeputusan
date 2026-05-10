@@ -19,7 +19,7 @@ class AuthController extends Controller
             $user = Auth::user();
             $token = $user->createToken('auth_token')->plainTextToken;
             return response()->json([
-                'message'   => 'Login successful',
+                'message'   => 'Login successful', 
                 'role'    => $user->role == User::ROLE_SUPERADMIN ? 'superadmin' : 'admin',
                 'token' => $token,
                 'token_type' => 'Bearer'
