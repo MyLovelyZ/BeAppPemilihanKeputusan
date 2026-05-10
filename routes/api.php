@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminManagementController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,4 +22,8 @@ Route::middleware(['auth:sanctum', 'superadmin'])->group(function () {
     Route::get('superadmin/admins', [\App\Http\Controllers\AdminManagementController::class, 'index']);
     Route::post('superadmin/admins', [\App\Http\Controllers\AdminManagementController::class, 'store']);
     Route::delete('superadmin/admins/{id}', [\App\Http\Controllers\AdminManagementController::class, 'destroy']);
+
+    Route::get('superadmin/admins/{id}/quizzes', [AdminManagementController::class, 'adminQuizzes']);
+    Route::patch('superadmin/admins/{id}/ban', [AdminManagementController::class, 'banAdmin']);
+    Route::delete('superadmin/admins/quizzes/{id}', [AdminManagementController::class, 'deleteAdminQuiz']);
 });

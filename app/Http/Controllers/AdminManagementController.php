@@ -24,14 +24,6 @@ class AdminManagementController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        if ($request->role == User::ROLE_SUPERADMIN) {
-            if (User::where('role', User::ROLE_SUPERADMIN)->exists()) {
-                return response()->json([
-                    'message' => 'Sudah ada superadmin yang terdaftar'
-                ], 400);
-            }
-        }
-
         User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -56,5 +48,5 @@ class AdminManagementController extends Controller
         return response()->json([
             'message' => 'Admin berhasil dihapus'
         ]);
-    }
+    }   
 }
