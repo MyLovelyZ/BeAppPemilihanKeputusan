@@ -13,7 +13,8 @@ class QuizController extends Controller
         $user = Auth::user();
 
         if ($user->isSuperAdmin()) {
-            $quizzes = Quiz::with('author:id, name, email')->latest()->get();
+            // Superadmin melihat semua quiz beserta info pembuatnya
+            $quizzes = Quiz::with('author:id,name,email')->latest()->get();
 
             return response()->json([
                 'status' => 'success',
@@ -21,7 +22,8 @@ class QuizController extends Controller
                 'message' => 'Daftar semua quiz berhasil diambil (superadmin)'
             ]);
         } else {
-            $quizzes = Quiz::where('author_id', $user->id)->latest()->get();
+            // Admin hanya melihat quiz miliknya sendiri (kolom: user_id)
+            $quizzes = Quiz::where('user_id', $user->id)->latest()->get();
 
             return response()->json([
                 'status' => 'success',
@@ -39,9 +41,9 @@ class QuizController extends Controller
         ]);
 
         $quiz = Quiz::create([
+            'user_id' => Auth::id(),   // FK ke tabel users, sesuai kolom di migrasi
             'title' => $request->title,
             'description' => $request->description,
-            'author_id' => Auth::id(),
         ]);
 
         return response()->json([
@@ -53,7 +55,7 @@ class QuizController extends Controller
 
     public function show($id)
     {
-        $quiz = Quiz::with('author:id, name, email')->findOrFail($id);
+        $quiz = Quiz::with('author:id,name,email')->findOrFail($id);
 
         return response()->json([
             'status' => 'success',
@@ -65,7 +67,7 @@ class QuizController extends Controller
     {
         $quiz = Quiz::findOrFail($id);
 
-        if ($quiz->author_id !== Auth::id() && !Auth::user()->isSuperAdmin()) {
+        if ($quiz->user_id !== Auth::id() && !Auth::user()->isSuperAdmin()) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Anda tidak memiliki izin untuk mengedit quiz ini'
@@ -91,6 +93,20 @@ class QuizController extends Controller
 
     public function destroy($id)
     {
-        // Logic untuk menghapus quiz berdasarkan ID
+        $quiz = Quiz::findOrFail($id);
+
+        if ($quiz->user_id !== Auth::id() && !Auth::user()->isSuperAdmin()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Anda tidak memiliki izin untuk menghapus quiz ini'
+            ], 403);
+        }
+
+        $quiz->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Quiz berhasil dihapus'
+        ]);
     }
 }

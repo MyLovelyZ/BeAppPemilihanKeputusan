@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('quiz_grades', function (Blueprint $table) {
             $table->id();
             $table->foreignId('quiz_id')->constrained('quizzes')->onDelete('cascade');
-            $table->integer('min_point');
-            $table->string('label');
+            $table->string('label');         // Nama/kategori grade, contoh: "Sangat Baik"
+            $table->integer('min_point');    // Batas nilai minimum (inklusif)
+            $table->integer('max_point');    // Batas nilai maksimum (inklusif)
             $table->timestamps();
         });
     }

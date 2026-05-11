@@ -57,8 +57,6 @@ class User extends Authenticatable
         return $this->role === self::ROLE_ADMIN;
     }
 
-    // bikin relasi ygy
-
     public function quizzes()
     {
         return $this->hasMany(Quiz::class, 'user_id');
