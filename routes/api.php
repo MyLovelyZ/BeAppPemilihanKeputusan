@@ -9,11 +9,6 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);
-Route::get('/felixgay', function () {
-    return response()->json([
-        'message' => 'Felix Love Dylan'
-    ]);
-});
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);

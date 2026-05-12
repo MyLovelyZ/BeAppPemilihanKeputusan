@@ -13,7 +13,6 @@ class QuizController extends Controller
         $user = Auth::user();
 
         if ($user->isSuperAdmin()) {
-            // Superadmin melihat semua quiz beserta info pembuatnya
             $quizzes = Quiz::with('author:id,name,email')->latest()->get();
 
             return response()->json([
@@ -22,7 +21,6 @@ class QuizController extends Controller
                 'message' => 'Daftar semua quiz berhasil diambil (superadmin)'
             ]);
         } else {
-            // Admin hanya melihat quiz miliknya sendiri (kolom: user_id)
             $quizzes = Quiz::where('user_id', $user->id)->latest()->get();
 
             return response()->json([
@@ -41,7 +39,7 @@ class QuizController extends Controller
         ]);
 
         $quiz = Quiz::create([
-            'user_id' => Auth::id(),   // FK ke tabel users, sesuai kolom di migrasi
+            'user_id' => Auth::id(),
             'title' => $request->title,
             'description' => $request->description,
         ]);
